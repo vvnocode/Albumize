@@ -1,2 +1,5 @@
 thumbnail:
   out: ../data
+spring:
+  elasticsearch:
+    uris: 192.168.0.15:9200

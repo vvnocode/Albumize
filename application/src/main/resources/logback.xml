@@ -3,9 +3,9 @@
     <property name="appName" value="Albumize"/>
     <property name="logPath" value="${user.dir}/../logs"/>
     <!-- 日志最大循环保留个数，可以根据实际情况调整-->
-    <property name="log.max.index" value="10" />
+    <property name="log.max.index" value="10"/>
     <!-- 日志文件大小,超过这个大小将重新创建,可以根据实际情况调整-->
-    <property name="log.max.size" value="25MB" />
+    <property name="log.max.size" value="25MB"/>
 
     <!--控制台日志-->
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">

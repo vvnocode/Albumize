@@ -1,4 +1,4 @@
-package com.vv.tool.photos;
+package com.vv.tool.photos.spring;
 
 import com.vv.tool.photos.cache.ScanCache;
 import com.vv.tool.photos.config.PropertiesConfig;
@@ -21,13 +21,13 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
- * @description:
  * @author vv
+ * @description:
  * @date 2023/6/20 15:05
  */
 @Slf4j
 @SpringBootTest
-public class SpringTest {
+public class TestScan {
 
     @Autowired
     private PropertiesConfig propertiesConfig;

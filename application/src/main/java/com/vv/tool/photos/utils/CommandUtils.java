@@ -1,17 +1,18 @@
 package com.vv.tool.photos.utils;
 
 
-import com.vv.tool.photos.ffmpeg.FfmpegConstants;
 import lombok.extern.slf4j.Slf4j;
 
-import java.io.*;
-import java.util.ArrayList;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.List;
 import java.util.function.Consumer;
 
 /**
- * @description:
  * @author vv
+ * @description:
  * @date 2023/6/20 19:44
  */
 @Slf4j
