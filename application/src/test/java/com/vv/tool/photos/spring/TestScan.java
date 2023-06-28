@@ -1,9 +1,9 @@
 package com.vv.tool.photos.spring;
 
-import com.vv.tool.photos.cache.ScanCache;
 import com.vv.tool.photos.config.PropertiesConfig;
+import com.vv.tool.photos.es.element.ESElementService;
 import com.vv.tool.photos.ffmpeg.FfmpegConstants;
-import com.vv.tool.photos.file.PhFileVisitor;
+import com.vv.tool.photos.job.ScanJob;
 import com.vv.tool.photos.utils.CommandUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -13,12 +13,8 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.nio.file.PathMatcher;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * @author vv
@@ -33,10 +29,13 @@ public class TestScan {
     private PropertiesConfig propertiesConfig;
 
     @Autowired
-    private ScanCache scanCache;
+    private ThreadPoolTaskExecutor scanExecutor;
 
     @Autowired
-    private ThreadPoolTaskExecutor scanExecutor;
+    private ThreadPoolTaskExecutor compressExecutor;
+    @Autowired
+    private ESElementService esElementService;
+
 
     /**
      * 测试压缩
@@ -67,35 +66,10 @@ public class TestScan {
      * 测试扫描文件夹
      */
     @Test
-    public void testScan() {
-        long l1 = System.currentTimeMillis();
-        String path = "/Users/vv/Downloads/图片压缩测试/原图";
-        log.debug("path = {}", path);
-
-        String glob = "glob:**/*.{jpg,png,jpeg}";
-        PathMatcher pathMatcher = FileSystems.getDefault().getPathMatcher(glob);
-
-        AtomicBoolean finish = new AtomicBoolean(false);
-
-        scanExecutor.execute(() -> {
-            try {
-                Files.walkFileTree(new File(path).toPath(),
-                        new PhFileVisitor(scanCache, pathMatcher, scanExecutor, propertiesConfig));
-                log.debug("扫描 {} 完成", path);
-            } catch (IOException e) {
-                log.error("扫描 {} 失败", path);
-            } finally {
-                finish.set(true);
-            }
-        });
-
-
-        while (!finish.get() || scanCache.getCountJob().get() != scanCache.getCount().get()) {
+    public void testScanJob() {
+        scanExecutor.execute(new ScanJob(propertiesConfig, compressExecutor, esElementService));
+        while (true) {
 
         }
-        long l = scanCache.getCount().get();
-        long m = scanCache.getCountJob().get();
-        log.debug("总共{}文件，完成{}文件，耗时{}秒", l, m, (System.currentTimeMillis() - l1) / 1000.0);
-
     }
 }

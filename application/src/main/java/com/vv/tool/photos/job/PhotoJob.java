@@ -1,10 +1,10 @@
 package com.vv.tool.photos.job;
 
-import com.vv.tool.photos.cache.ScanCache;
 import com.vv.tool.photos.config.PropertiesConfig;
+import com.vv.tool.photos.es.element.ESElementService;
+import com.vv.tool.photos.es.element.Element;
 import com.vv.tool.photos.ffmpeg.FfmpegConstants;
 import com.vv.tool.photos.utils.CommandUtils;
-import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
@@ -21,15 +22,20 @@ import java.util.Random;
  * @date 2023/6/20 14:16
  */
 @Slf4j
-@AllArgsConstructor
 @NoArgsConstructor
 public class PhotoJob implements Runnable {
 
     private Path path;
 
-    private ScanCache scanCache;
-
     private PropertiesConfig propertiesConfig;
+
+    private ESElementService esElementService;
+
+    public PhotoJob(Path path, PropertiesConfig propertiesConfig, ESElementService esElementService) {
+        this.path = path;
+        this.propertiesConfig = propertiesConfig;
+        this.esElementService = esElementService;
+    }
 
     @Override
     public void run() {
@@ -68,10 +74,22 @@ public class PhotoJob implements Runnable {
             return;
         }
         //记录下已压缩图片数量
-        scanCache.getCountJob().incrementAndGet();
 
         //todo 存储文件信息
+        String fileName = path.getFileName().toString();
+        File file1 = path.toFile();
+        String parentPath = file1.getParentFile().toString();
 
-
+        Element element = new Element();
+        element.setFileName(fileName);
+        element.setFileType(1);
+        element.setFileSize(file1.length());
+        element.setThumbnailSize(12L);
+        element.setFileParentPath(file1.getParentFile().toString());
+        element.setFileCreateTime(new Date());
+        element.setFileAbsolutePath(parentPath + "/" + fileName);
+        element.setThumbnailAbsolutePath(outPhotoPath);
+        Element save = esElementService.Save(element);
+        log.debug("存入一条数据 {}", save);
     }
 }

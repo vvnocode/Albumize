@@ -1,5 +1,6 @@
 package com.vv.tool.photos.spring;
 
+import com.alibaba.fastjson.JSON;
 import com.vv.tool.photos.es.element.ESElementService;
 import com.vv.tool.photos.es.element.Element;
 import lombok.extern.slf4j.Slf4j;
@@ -38,7 +39,8 @@ public class TestES {
 
     @Test
     public void testFindByPath() {
-        Page<Element> page = esElementService.findByParent("/cos/王某某/海边", 10, 10);
-        log.debug("查询分页结果：{}", page);
+        long l = System.currentTimeMillis();
+        Page<Element> page = esElementService.findByParent("../pictures/白金Saki 9套/白金Saki - 学生制服", 1, 10);
+        log.info("查询分页耗费 {}毫秒， 结果：{}", System.currentTimeMillis() - l, JSON.toJSONString(page));
     }
 }

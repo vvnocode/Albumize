@@ -16,4 +16,7 @@ public class PropertiesConfig {
     @Value("${thumbnail.out}")
     private String thumbnailOut;
 
+    @Value("${picture.path}")
+    private String picturePath;
+
 }

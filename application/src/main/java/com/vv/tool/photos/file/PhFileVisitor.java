@@ -1,9 +1,8 @@
 package com.vv.tool.photos.file;
 
-import com.vv.tool.photos.cache.ScanCache;
 import com.vv.tool.photos.config.PropertiesConfig;
+import com.vv.tool.photos.es.element.ESElementService;
 import com.vv.tool.photos.job.PhotoJob;
-import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
@@ -22,16 +21,22 @@ import java.nio.file.attribute.BasicFileAttributes;
  */
 @Slf4j
 @NoArgsConstructor
-@AllArgsConstructor
 public class PhFileVisitor implements FileVisitor<Path> {
-
-    private ScanCache scanCache;
 
     private PathMatcher pathMatcher;
 
     private ThreadPoolTaskExecutor scanExecutor;
 
     private PropertiesConfig propertiesConfig;
+
+    private ESElementService esElementService;
+
+    public PhFileVisitor(PathMatcher pathMatcher, ThreadPoolTaskExecutor scanExecutor, PropertiesConfig propertiesConfig, ESElementService esElementService) {
+        this.pathMatcher = pathMatcher;
+        this.scanExecutor = scanExecutor;
+        this.propertiesConfig = propertiesConfig;
+        this.esElementService = esElementService;
+    }
 
     /**
      * Invoked for a directory before entries in the directory are visited.
@@ -45,14 +50,14 @@ public class PhFileVisitor implements FileVisitor<Path> {
      * Invoked for a file in a directory.
      */
     @Override
-    public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+    public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
 
         if (pathMatcher.matches(file)) {
 //            log.debug("符合条件的文件: {}", file);
-            PhotoJob job = new PhotoJob(file, scanCache, propertiesConfig);
+            PhotoJob job = new PhotoJob(file, propertiesConfig, esElementService);
             scanExecutor.execute(job);
             //这里记录下扫描的数量
-            scanCache.getCount().incrementAndGet();
+
         }
 
         return FileVisitResult.CONTINUE;
