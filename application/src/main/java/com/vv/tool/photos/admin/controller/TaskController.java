@@ -1,5 +1,6 @@
 package com.vv.tool.photos.admin.controller;
 
+import com.vv.tool.photos.base.BaseResult;
 import com.vv.tool.photos.config.PropertiesConfig;
 import com.vv.tool.photos.es.element.ESElementService;
 import com.vv.tool.photos.job.ScanJob;
@@ -33,8 +34,8 @@ public class TaskController {
     private ThreadPoolTaskExecutor compressExecutor;
 
     @GetMapping("scan")
-    public String scan() {
+    public BaseResult<String> scan() {
         scanExecutor.execute(new ScanJob(propertiesConfig, compressExecutor, esElementService));
-        return "success";
+        return BaseResult.success(0, null, "success");
     }
 }

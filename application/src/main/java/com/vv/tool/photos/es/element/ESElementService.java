@@ -19,7 +19,7 @@ public class ESElementService {
     }
 
     public Page<Element> findByParent(String parent, int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
+        Pageable pageable = PageRequest.of(page - 1, size);
         return esElementRepository.findAllByParentIdEquals(Objects.equals(parent, "") ? null : parent, pageable);
     }
 }
