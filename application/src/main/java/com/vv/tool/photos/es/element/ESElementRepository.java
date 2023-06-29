@@ -6,6 +6,5 @@ import org.springframework.data.elasticsearch.repository.ElasticsearchRepository
 
 public interface ESElementRepository extends ElasticsearchRepository<Element, String> {
 
-    Page<Element> findElementsByFileParentPathEquals(String parent, Pageable pageable);
-
+    Page<Element> findAllByParentIdEquals(String parentId, Pageable pageable);
 }

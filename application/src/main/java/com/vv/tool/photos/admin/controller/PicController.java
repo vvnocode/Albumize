@@ -21,4 +21,5 @@ public class PicController {
         Page<Element> page = esElementService.findByParent(parentId, pageNo, pageSize);
         return JSON.toJSONString(page);
     }
+
 }

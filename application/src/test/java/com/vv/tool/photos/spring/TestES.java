@@ -40,7 +40,7 @@ public class TestES {
     @Test
     public void testFindByPath() {
         long l = System.currentTimeMillis();
-        Page<Element> page = esElementService.findByParent("../pictures/白金Saki 9套/白金Saki - 学生制服", 1, 10);
-        log.info("查询分页耗费 {}毫秒， 结果：{}", System.currentTimeMillis() - l, JSON.toJSONString(page));
+        Page<Element> page = esElementService.findByParent(null, 1, 10);
+        log.info("查询分页耗费 {}毫秒， 结果：{}", System.currentTimeMillis() - l, JSON.toJSONString(page.stream().toList()));
     }
 }

@@ -6,6 +6,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
+
 @Service
 public class ESElementService {
 
@@ -18,6 +20,6 @@ public class ESElementService {
 
     public Page<Element> findByParent(String parent, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        return esElementRepository.findElementsByFileParentPathEquals(parent, pageable);
+        return esElementRepository.findAllByParentIdEquals(Objects.equals(parent, "") ? null : parent, pageable);
     }
 }

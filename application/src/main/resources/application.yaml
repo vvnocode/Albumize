@@ -1,7 +1,7 @@
 picture:
-  path: ../pictures
+  path: /home/ubtzw/Java/Code/Albumize/pictures
 thumbnail:
-  out: ../data/thumbnail
+  out: /home/ubtzw/Java/Code/Albumize/data/thumbnail
 spring:
   elasticsearch:
     uris: 192.168.0.15:9200

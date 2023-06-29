@@ -2,7 +2,7 @@ package com.vv.tool.photos.ffmpeg;
 
 public interface FfmpegConstants {
 
-    String FFMPEG_PATH = "../bin/ffmpeg/ffmpeg";
+    String FFMPEG_PATH = "ffmpeg";
 
     String I = "-i";
 
