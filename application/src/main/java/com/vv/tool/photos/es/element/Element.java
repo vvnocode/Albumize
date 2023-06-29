@@ -10,8 +10,15 @@ import org.springframework.data.elasticsearch.annotations.FieldType;
 import java.util.Date;
 
 @Data
-@Document(indexName = "element", createIndex = true)
+@Document(indexName = "element", createIndex = false)
 public class Element {
+
+    @Id
+    @Field(analyzer = "ID", type = FieldType.Auto)
+    private String id;
+
+    @Field(analyzer = "PARENT_ID", type = FieldType.Keyword)
+    private String parentId;
 
     @Field(analyzer = "FILE_TYPE", type = FieldType.Integer)
     private Integer fileType;
@@ -22,7 +29,6 @@ public class Element {
     @Field(analyzer = "FILE_PARENT_PATH", type = FieldType.Keyword)
     private String fileParentPath;
 
-    @Id
     @Field(analyzer = "FILE_ABSOLUTE_PATH", type = FieldType.Keyword)
     private String fileAbsolutePath;
 

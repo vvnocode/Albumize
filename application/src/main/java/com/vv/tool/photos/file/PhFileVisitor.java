@@ -1,18 +1,22 @@
 package com.vv.tool.photos.file;
 
+import com.vv.tool.photos.cache.ScanCache;
 import com.vv.tool.photos.config.PropertiesConfig;
 import com.vv.tool.photos.es.element.ESElementService;
+import com.vv.tool.photos.es.element.Element;
 import com.vv.tool.photos.job.PhotoJob;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileVisitResult;
 import java.nio.file.FileVisitor;
 import java.nio.file.Path;
 import java.nio.file.PathMatcher;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.Date;
 
 /**
  * @author vv
@@ -43,6 +47,26 @@ public class PhFileVisitor implements FileVisitor<Path> {
      */
     @Override
     public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+        //todo 保存文件夹信息
+        String fileName = dir.getFileName().toString();
+        File file1 = dir.toFile();
+        String parentPath = file1.getParentFile().toString();
+        String parentAbsolutePath = file1.getParentFile().getAbsolutePath();
+        String absolutePath = dir.toAbsolutePath().toString();
+
+        String parentId = ScanCache.getId(parentAbsolutePath);
+        Element element = new Element();
+        element.setFileName(fileName);
+        element.setFileType(2);
+        element.setFileParentPath(parentPath);
+        element.setFileCreateTime(new Date());
+        element.setFileAbsolutePath(absolutePath);
+        element.setParentId(parentId);
+        Element save = esElementService.Save(element);
+
+        String id = save.getId();
+        ScanCache.putId(absolutePath, id);
+
         return FileVisitResult.CONTINUE;
     }
 

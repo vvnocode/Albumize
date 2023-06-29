@@ -1,5 +1,6 @@
 package com.vv.tool.photos.job;
 
+import com.vv.tool.photos.cache.ScanCache;
 import com.vv.tool.photos.config.PropertiesConfig;
 import com.vv.tool.photos.es.element.ESElementService;
 import com.vv.tool.photos.es.element.Element;
@@ -75,20 +76,24 @@ public class PhotoJob implements Runnable {
         }
         //记录下已压缩图片数量
 
-        //todo 存储文件信息
+        // 存储文件信息
         String fileName = path.getFileName().toString();
         File file1 = path.toFile();
         String parentPath = file1.getParentFile().toString();
+
+        String parentId = ScanCache.getId(parentPath);
 
         Element element = new Element();
         element.setFileName(fileName);
         element.setFileType(1);
         element.setFileSize(file1.length());
+        //todo 真实值
         element.setThumbnailSize(12L);
-        element.setFileParentPath(file1.getParentFile().toString());
+        element.setFileParentPath(parentPath);
         element.setFileCreateTime(new Date());
-        element.setFileAbsolutePath(parentPath + "/" + fileName);
+        element.setFileAbsolutePath(absolutePath);
         element.setThumbnailAbsolutePath(outPhotoPath);
+        element.setParentId(parentId);
         Element save = esElementService.Save(element);
         log.debug("存入一条数据 {}", save);
     }

@@ -1,20 +1,21 @@
 package com.vv.tool.photos.cache;
 
-import lombok.Getter;
-
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * @author vv
  * @description:
  * @date 2023/6/20 15:45
  */
-@Getter
 public class ScanCache {
 
-    public static AtomicLong count = new AtomicLong();
-    public static AtomicLong countJob = new AtomicLong();
+    private static ConcurrentHashMap<String, String> taskMap = new ConcurrentHashMap();
 
-    public static ConcurrentHashMap<String, Object> taskMap = new ConcurrentHashMap();
+    public synchronized static void putId(String key, String id) {
+        taskMap.put(key, id);
+    }
+
+    public synchronized static String getId(String key) {
+        return taskMap.get(key);
+    }
 }
