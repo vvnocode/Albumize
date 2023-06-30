@@ -1,6 +1,7 @@
 package com.vv.tool.photos.file;
 
 import com.vv.tool.photos.cache.ScanCache;
+import com.vv.tool.photos.common.MyEnums;
 import com.vv.tool.photos.config.PropertiesConfig;
 import com.vv.tool.photos.es.element.ESElementService;
 import com.vv.tool.photos.es.element.Element;
@@ -57,7 +58,7 @@ public class PhFileVisitor implements FileVisitor<Path> {
         String parentId = ScanCache.getId(parentAbsolutePath);
         Element element = new Element();
         element.setFileName(fileName);
-        element.setFileType(2);
+        element.setFileType(MyEnums.FileType.FOLDER.getType());
         element.setFileParentPath(parentPath);
         element.setFileCreateTime(new Date());
         element.setFileAbsolutePath(absolutePath);

@@ -11,11 +11,11 @@ public class ScanCache {
 
     private static ConcurrentHashMap<String, String> taskMap = new ConcurrentHashMap();
 
-    public synchronized static void putId(String key, String id) {
+    public static void putId(String key, String id) {
         taskMap.put(key, id);
     }
 
-    public synchronized static String getId(String key) {
+    public static String getId(String key) {
         return taskMap.get(key);
     }
 }

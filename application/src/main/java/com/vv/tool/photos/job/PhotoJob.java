@@ -1,6 +1,7 @@
 package com.vv.tool.photos.job;
 
 import com.vv.tool.photos.cache.ScanCache;
+import com.vv.tool.photos.common.MyEnums;
 import com.vv.tool.photos.config.PropertiesConfig;
 import com.vv.tool.photos.es.element.ESElementService;
 import com.vv.tool.photos.es.element.Element;
@@ -85,7 +86,7 @@ public class PhotoJob implements Runnable {
 
         Element element = new Element();
         element.setFileName(fileName);
-        element.setFileType(1);
+        element.setFileType(MyEnums.FileType.IMAGE.getType());
         element.setFileSize(file1.length());
         //todo 真实值
         element.setThumbnailSize(12L);

@@ -24,38 +24,13 @@
     elasticsearch:7.17.10
     ```
 
-- 创建索引
-  PUT /element
-    ```
-    {
-        "mappings": {
-            "properties": {
-                "FILE_TYPE": {
-                    "type": "integer"
-                },
-                "FILE_NAME": {
-                    "type": "keyword"
-                },
-                "FILE_PARENT_PATH": {
-                    "type": "keyword"
-                },
-                "FILE_ABSOLUTE_PATH": {
-                    "type": "keyword"
-                },
-                "FILE_SIZE": {
-                    "type": "long"
-                },
-                "FILE_CREATE_TIME": {
-                    "type": "date",
-                    "format": "yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||epoch_millis"
-                },
-                "THUMBNAIL_ABSOLUTE_PATH": {
-                    "type": "text"
-                },
-                "THUMBNAIL_SIZE": {
-                    "type": "long"
-                }
-            }
-        }
-    }
-    ```
+### 接口
+
+- 扫描
+  http://localhost:8080/task/scan
+- 分页查询
+  parentId为空时查询顶层
+  http://localhost:8080/pic/l?pageSize=10&pageNo=1&parentId=
+- 访问图片
+  type=2缩略图，否则原图
+  http://localhost:8080/pic/p?id=giixDIkBKWARSOetOkRD&type=2
