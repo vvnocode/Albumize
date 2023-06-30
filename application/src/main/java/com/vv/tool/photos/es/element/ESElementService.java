@@ -1,6 +1,7 @@
 package com.vv.tool.photos.es.element;
 
 import com.github.benmanes.caffeine.cache.Cache;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -11,6 +12,7 @@ import org.springframework.util.ObjectUtils;
 
 import java.util.Objects;
 
+@Slf4j
 @Service
 public class ESElementService {
 
@@ -55,14 +57,19 @@ public class ESElementService {
      */
     public Page<Element> orderByCreateTime(Sort.Direction sort, int page, int size) {
         Pageable pageable = PageRequest.of(page - 1, size, Sort.by(sort, "fileCreateTime"));
-        Page<Element> elementPage = esElementRepository.findAll(pageable);
-        //存入缓存
-        if (!ObjectUtils.isEmpty(elementPage.getContent())) {
-            for (Element element : elementPage.getContent()) {
-                elementCache.put(element.getId(), element);
+        try {
+            Page<Element> elementPage = esElementRepository.findAll(pageable);
+            //存入缓存
+            if (!ObjectUtils.isEmpty(elementPage.getContent())) {
+                for (Element element : elementPage.getContent()) {
+                    elementCache.put(element.getId(), element);
+                }
             }
+            return elementPage;
+        } catch (Exception e) {
+            log.error("时间线查询出错 : {}", e.getLocalizedMessage());
         }
-        return elementPage;
+        return Page.empty(pageable);
     }
 
 }
