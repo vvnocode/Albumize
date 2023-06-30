@@ -13,6 +13,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -38,6 +39,14 @@ public class PicController {
     @Autowired
     private Cache<String, Element> elementCache;
 
+    /**
+     * 分页查询文件
+     *
+     * @param parentId
+     * @param pageNo
+     * @param pageSize
+     * @return
+     */
     @GetMapping("l")
     public BaseResult<BasePage<FileVo>> l(String parentId, Integer pageNo, Integer pageSize) {
         Page<Element> page = esElementService.findByParent(parentId, pageNo, pageSize);
@@ -47,6 +56,24 @@ public class PicController {
     }
 
     /**
+     * 时间线
+     *
+     * @param sort
+     * @param pageNo
+     * @param pageSize
+     * @return
+     */
+    @GetMapping("timeLine")
+    public BaseResult<BasePage<FileVo>> l(Sort.Direction sort, Integer pageNo, Integer pageSize) {
+        Page<Element> page = esElementService.orderByCreateTime(sort, pageNo, pageSize);
+        List<FileVo> voList = page.getContent().stream().map(o -> fileMapper.entity2Vo(o)).collect(Collectors.toList());
+        BasePage<FileVo> basePage = new BasePage<>(page.getTotalElements(), voList);
+        return BaseResult.success(0, null, basePage);
+    }
+
+    /**
+     * 访问图片
+     *
      * @param id
      * @param type
      * @param response

@@ -34,3 +34,5 @@
 - 访问图片
   type=2缩略图，否则原图
   http://localhost:8080/pic/p?id=giixDIkBKWARSOetOkRD&type=2
+- 时间线
+  http://localhost:8080/pic/timeLine?pageSize=10&pageNo=1&sort=DESC
